@@ -11,6 +11,5 @@ export class CreateCoffeeInput {
   @MinLength(3)
   @MaxLength(25)
   brand: string;
-
   flavors: string[];
 }
