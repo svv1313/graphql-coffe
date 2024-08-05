@@ -2,8 +2,10 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+"""The coffee model"""
 type Coffee {
-  id: String!
+  """Id of the coffee"""
+  id: ID!
   name: String!
   brand: String!
   flavors: [String!]!
@@ -11,4 +13,17 @@ type Coffee {
 
 type Query {
   coffees: [Coffee!]!
+  coffee(id: ID!): Coffee
+}
+
+type Mutation {
+  createCoffee(createCoffeeInput: CreateCoffeeInput!): Coffee
+}
+
+"""Create coffee input object type."""
+input CreateCoffeeInput {
+  """The name of the coffee."""
+  name: String!
+  brand: String!
+  flavors: [String!]!
 }
