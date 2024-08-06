@@ -1,23 +1,14 @@
 import { Parent, ResolveField, Resolver } from '@nestjs/graphql';
 import { Coffee } from './entities/coffee.entity/coffee.entity';
-import { Flavor } from 'src/coffee/entities/flavor.entity/flavor.entity';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Flavor } from '../coffee/entities/flavor.entity/flavor.entity';
+import { FlavorsByCoffeeLoader } from './data-loader/flavors-by-coffee.loader/flavors-by-coffee.loader';
 
 @Resolver(() => Coffee)
 export class CoffeeFlavorsResolver {
-  constructor(
-    @InjectRepository(Flavor)
-    private readonly flavorsRepository: Repository<Flavor>,
-  ) {}
+  constructor(private readonly flavorsByCoffeeLoader: FlavorsByCoffeeLoader) {}
 
   @ResolveField('flavors', () => [Flavor])
   async getFlavorsOfCoffee(@Parent() coffee: Coffee) {
-    return this.flavorsRepository
-      .createQueryBuilder('flavor')
-      .innerJoin('flavor.coffees', 'coffee', 'coffee.id = :coffeeId', {
-        coffeeId: coffee.id,
-      })
-      .getMany();
+    return this.flavorsByCoffeeLoader.load(coffee.id);
   }
 }
